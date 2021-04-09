@@ -17,21 +17,27 @@ $password = $_POST['password'];
 
 if (isset($database)) {
 $connection = $database->getConnection();
+    if (isset($email) && isset($password)) {
+        if (checkIfUserExists($email, $connection)) {
+            if (checkUserCredentials($email, $password, $connection)) {
+                $userId = getUserId($email, $connection);
+                $token = createJWT($userId);
 
-if (checkIfUserExists($email, $connection)) {
-    if (checkUserCredentials($email, $password, $connection)) {
-        $userId = getUserId($email, $connection);
-        $token = createJWT($userId);
-
-        http_response_code(200);
-        echo json_encode(array('token' => $token, 'userId' => $userId));
+                http_response_code(200);
+                echo json_encode(array('token' => $token, 'userId' => $userId));
+            }
+            else {
+                http_response_code(401);
+                echo json_encode(array('message' => 'Invalid user credentials'));
+            }
+        } else {
+            http_response_code(404);
+            echo json_encode(array('message' => 'User not found'));
+        }
     } else {
-        http_response_code(401);
-        echo json_encode(array('message' => 'Invalid user credentials'));
+        http_response_code(422);
     }
 } else {
-    http_response_code(404);
-    echo json_encode(array('message' => 'User not found'));
-}
+    http_response_code(500);
 }
 

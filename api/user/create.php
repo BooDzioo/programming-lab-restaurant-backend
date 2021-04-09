@@ -17,19 +17,26 @@ $password = $_POST['password'];
 
 if (isset($database)) {
     $connection = $database->getConnection();
+    if (isset($name) && isset($surname) && isset($email) && isset($password)) {
+        if (!checkIfUserExists($email, $connection)) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $query = "INSERT INTO `users` (name, surname, email, password) VALUES('$name', '$surname', '$email', '$password')";
+            $result = mysqli_query($connection, $query);
 
-    if (!checkIfUserExists($email, $connection)) {
-        $query = "INSERT INTO `users` (name, surname, email, password) VALUES('$name', '$surname', '$email', '$password')";
-        $result = mysqli_query($connection, $query);
+            $userId = $connection->insert_id;
+            $token = createJWT($userId);
 
-        $userId = $connection->insert_id;
-        $token = createJWT($userId);
-
-        http_response_code(200);
-        echo json_encode(array('token' => $token, 'userId' => $userId));
+            http_response_code(200);
+            echo json_encode(array('token' => $token, 'userId' => $userId));
+        } else {
+            http_response_code(409);
+            echo json_encode(array('message' => 'User already exists!'));
+        }
     } else {
-        http_response_code(409);
-        echo json_encode(array('message' => 'User already exists!'));
+        http_response_code(422);
     }
+
+} else {
+    http_response_code(500);
 }
 
