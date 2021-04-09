@@ -20,8 +20,8 @@ if (isset($database)) {
     if (isset($name) && isset($surname) && isset($email) && isset($password)) {
         if (!checkIfUserExists($email, $connection)) {
             $password = password_hash($password, PASSWORD_DEFAULT);
-            $query = "INSERT INTO `users` (name, surname, email, password) VALUES('$name', '$surname', '$email', '$password')";
-            $result = mysqli_query($connection, $query);
+            $query = "INSERT INTO `users` (name, surname, email, password, type) VALUES('$name', '$surname', '$email', '$password', 'B')";
+            $result = $connection->query($query);
 
             $userId = $connection->insert_id;
             $token = createJWT($userId);
