@@ -3,6 +3,7 @@ include_once '../config/database.php';
 include_once '../JWT/createJWT.php';
 include_once './utils/checkIfExists.php';
 include_once './utils/checkCredentials.php';
+include_once './utils/getId.php';
 
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Origin: *");
@@ -14,15 +15,16 @@ $_POST = json_decode($rest_json, true);
 $email = $_POST['email'];
 $password = $_POST['password'];
 
-$database = new Database();
+if (isset($database)) {
 $connection = $database->getConnection();
 
 if (checkIfUserExists($email, $connection)) {
     if (checkUserCredentials($email, $password, $connection)) {
-        $token = createJWT($email);
+        $userId = getUserId($email, $connection);
+        $token = createJWT($userId);
 
         http_response_code(200);
-        echo json_encode(array('token' => $token));
+        echo json_encode(array('token' => $token, 'userId' => $userId));
     } else {
         http_response_code(401);
         echo json_encode(array('message' => 'Invalid user credentials'));
@@ -31,5 +33,5 @@ if (checkIfUserExists($email, $connection)) {
     http_response_code(404);
     echo json_encode(array('message' => 'User not found'));
 }
+}
 
-mysqli_close($connection);

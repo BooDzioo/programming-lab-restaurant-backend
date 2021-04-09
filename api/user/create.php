@@ -15,21 +15,21 @@ $surname = $_POST['surname'];
 $email = $_POST['email'];
 $password = $_POST['password'];
 
-$database = new Database();
-$connection = $database->getConnection();
+if (isset($database)) {
+    $connection = $database->getConnection();
 
-if (!checkIfUserExists($email, $connection)) {
-    $query = "INSERT INTO `users` (name, surname, email, password) VALUES('$name', '$surname', '$email', '$password')";
-    $result = mysqli_query($connection, $query);
+    if (!checkIfUserExists($email, $connection)) {
+        $query = "INSERT INTO `users` (name, surname, email, password) VALUES('$name', '$surname', '$email', '$password')";
+        $result = mysqli_query($connection, $query);
 
-    $token = createJWT($email);
+        $userId = $connection->insert_id;
+        $token = createJWT($userId);
 
-    http_response_code(200);
-    echo json_encode(array('token' => $token));
-} else {
-    http_response_code(409);
-    echo json_encode(array('message' => 'User already exists!'));
+        http_response_code(200);
+        echo json_encode(array('token' => $token, 'userId' => $userId));
+    } else {
+        http_response_code(409);
+        echo json_encode(array('message' => 'User already exists!'));
+    }
 }
-
-mysqli_close($connection);
 

@@ -13,7 +13,7 @@ class Database
         $this->db_name = "project_restaurant";
         $this->password = "";
 
-        $this->connect = mysqli_connect($this->host, $this->username, $this->password, $this->db_name);
+        $this->connect = new mysqli($this->host, $this->username, $this->password, $this->db_name);
 
         if(!$this->connect->connect_errno) {
             mysqli_select_db($this->connect, $this->db_name);
