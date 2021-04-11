@@ -2,6 +2,7 @@
 include_once '../config/database.php';
 include_once './utils/checkCredentials.php';
 include_once '../JWT/checkJWT.php';
+include_once '../JWT/getTokenFromHeader.php';
 
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Origin: *");
@@ -12,7 +13,7 @@ $_POST = json_decode($rest_json, true);
 
 $oldPassword = $_POST['oldPassword'];
 $newPassword = $_POST['newPassword'];
-$token = $_POST['token'];
+$token = getTokenFromHeader();
 $userId = $_POST['userId'];
 $email = $_POST['email'];
 

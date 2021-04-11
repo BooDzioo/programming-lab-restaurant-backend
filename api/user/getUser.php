@@ -2,6 +2,7 @@
 include_once '../config/database.php';
 include_once '../JWT/checkJWT.php';
 include_once './utils/checkIfExists.php';
+include_once '../JWT/getTokenFromHeader.php';
 
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Origin: *");
@@ -10,7 +11,7 @@ header('Content-Type: application/json');
 $rest_json = file_get_contents("php://input");
 $_POST = json_decode($rest_json, true);
 
-$token = $_POST['token'];
+$token = getTokenFromHeader();
 $userId = $_POST['userId'];
 
 if(isset($database) && isset($userId) && isset($token)) {
@@ -32,6 +33,6 @@ if(isset($database) && isset($userId) && isset($token)) {
         echo json_encode(array('message' => "Unauthorized"));
     }
 } else {
-    echo json_encode(array('message' => 'not set', 'database' => isset($database), 'userId' => isset($userId), 'token' => isset($token)));
+    echo json_encode(array('message' => 'not set', 'database' => isset($database), 'userId' => isset($userId), 'token' => $token));
 }
 
