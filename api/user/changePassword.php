@@ -11,11 +11,11 @@ header('Content-Type: application/json');
 $rest_json = file_get_contents("php://input");
 $_POST = json_decode($rest_json, true);
 
-$oldPassword = $_POST['oldPassword'];
-$newPassword = $_POST['newPassword'];
+$oldPassword = htmlspecialchars(strip_tags($_POST['oldPassword']));
+$newPassword = htmlspecialchars(strip_tags($_POST['newPassword']));
 $token = getTokenFromHeader();
-$userId = $_POST['userId'];
-$email = $_POST['email'];
+$userId = htmlspecialchars(strip_tags($_POST['userId']));
+$email = htmlspecialchars(strip_tags($_POST['email']));
 
 if(isset($database)) {
     if (isset($oldPassword) && isset($newPassword) && isset($token) && isset($userId) && isset($email)) {
