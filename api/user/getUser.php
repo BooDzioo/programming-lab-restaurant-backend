@@ -33,6 +33,7 @@ if(isset($database) && isset($userId) && isset($token)) {
         echo json_encode(array('message' => "Unauthorized"));
     }
 } else {
-    echo json_encode(array('message' => 'not set', 'database' => isset($database), 'userId' => isset($userId), 'token' => $token));
+    http_response_code(422);
+    echo json_encode(array('message' => 'Not enough data'));
 }
 

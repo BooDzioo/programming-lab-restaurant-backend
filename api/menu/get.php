@@ -22,4 +22,5 @@ if (isset($database)) {
     echo json_encode($arr);
 } else {
     http_response_code(500);
+    echo json_encode(array('message' => 'Database error'));
 }

@@ -17,7 +17,7 @@ $email = htmlspecialchars(strip_tags($_POST['email']));
 $password = htmlspecialchars(strip_tags($_POST['password']));
 
 if (isset($database)) {
-$connection = $database->getConnection();
+    $connection = $database->getConnection();
     if (isset($email) && isset($password)) {
         if (checkIfUserExists($email, $connection)) {
             if (checkUserCredentials($email, $password, $connection)) {
@@ -38,8 +38,10 @@ $connection = $database->getConnection();
         }
     } else {
         http_response_code(422);
+        echo json_encode(array('message' => 'Not enough data'));
     }
 } else {
     http_response_code(500);
+    echo json_encode(array('message' => 'Database error'));
 }
 

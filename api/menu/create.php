@@ -18,10 +18,13 @@ if (isset($database)) {
             $connection = $database->getConnection();
         } else {
             http_response_code(401);
+            echo json_encode(array('message' => "Unauthorized"));
         }
     } else {
         http_response_code(422);
+        echo json_encode(array('message' => 'Not enough data'));
     }
 } else {
     http_response_code(500);
+    echo json_encode(array('message' => 'Database error'));
 }
