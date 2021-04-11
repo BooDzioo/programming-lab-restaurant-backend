@@ -4,6 +4,7 @@ include_once '../JWT/createJWT.php';
 include_once './utils/checkIfExists.php';
 include_once './utils/checkCredentials.php';
 include_once './utils/getId.php';
+include_once './utils/checkIfAdmin.php';
 
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Origin: *");
@@ -22,9 +23,10 @@ $connection = $database->getConnection();
             if (checkUserCredentials($email, $password, $connection)) {
                 $userId = getUserId($email, $connection);
                 $token = createJWT($userId);
+                $isAdmin = checkIfAdmin($userId, $connection);
 
                 http_response_code(200);
-                echo json_encode(array('token' => $token, 'userId' => $userId));
+                echo json_encode(array('token' => $token, 'userId' => $userId, 'isAdmin' => $isAdmin));
             }
             else {
                 http_response_code(401);
