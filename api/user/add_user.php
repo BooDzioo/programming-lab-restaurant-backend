@@ -1,5 +1,6 @@
 <?php
 include_once '../JWT/getTokenFromHeader.php';
+include_once './utils/checkIfExists.php';
 include_once '../JWT/checkJWT.php';
 include_once './utils/checkIfAdmin.php';
 include_once '../config/database.php';
@@ -23,14 +24,19 @@ if (isset($database)) {
     if (isset($token) && isset($userId) && isset($name) && isset($surname) && isset($email) && isset($password) && isset($accountType)) {
         $connection = $database->getConnection();
         if (checkJWT($token, $userId) && checkIfAdmin($userId, $connection)) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            $query = "INSERT INTO `users` (name, surname, email, password, type) VALUES ('$name', '$surname', '$email', '$password', '$accountType');";
-            if ($connection->query($query)) {
-                http_response_code(200);
-            }
-            else {
-                http_response_code(500);
-                echo json_encode(array('message' => 'Database error'));
+            if(!checkIfUserExists($email, $connection)){
+                $password = password_hash($password, PASSWORD_DEFAULT);
+                $query = "INSERT INTO `users` (name, surname, email, password, type) VALUES ('$name', '$surname', '$email', '$password', '$accountType');";
+                if ($connection->query($query)) {
+                    http_response_code(200);
+                }
+                else {
+                    http_response_code(500);
+                    echo json_encode(array('message' => 'Database error'));
+                }
+            } else {
+                http_response_code(409);
+                echo json_encode(array('message' => 'User already exists'));
             }
         } else {
             http_response_code(401);
