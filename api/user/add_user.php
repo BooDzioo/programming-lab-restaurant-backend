@@ -13,12 +13,12 @@ $rest_json = file_get_contents("php://input");
 $_POST = json_decode($rest_json, true);
 
 $token = getTokenFromHeader();
-$userId = htmlspecialchars(strip_tags($_POST['userId']));
-$name = htmlspecialchars(strip_tags($_POST['name']));
-$surname = htmlspecialchars(strip_tags($_POST['surname']));
-$email = htmlspecialchars(strip_tags($_POST['email']));
-$password = htmlspecialchars(strip_tags($_POST['password']));
-$accountType = htmlspecialchars(strip_tags($_POST['accountType']));
+$userId = strip_tags($_POST['userId']);
+$name = strip_tags($_POST['name']);
+$surname = strip_tags($_POST['surname']);
+$email = strip_tags($_POST['email']);
+$password = strip_tags($_POST['password']);
+$accountType = strip_tags($_POST['accountType']);
 
 if (isset($database)) {
     if (isset($token) && isset($userId) && isset($name) && isset($surname) && isset($email) && isset($password) && isset($accountType)) {

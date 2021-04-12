@@ -12,7 +12,7 @@ $rest_json = file_get_contents("php://input");
 $_POST = json_decode($rest_json, true);
 
 $token = getTokenFromHeader();
-$userId = htmlspecialchars(strip_tags($_POST['userId']));
+$userId = strip_tags($_POST['userId']);
 
 if(isset($database) && isset($userId) && isset($token)) {
     if(checkJWT($token, $userId)) {

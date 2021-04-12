@@ -13,7 +13,7 @@ header('Content-Type: application/json');
 $rest_json = file_get_contents("php://input");
 $_POST = json_decode($rest_json, true);
 
-$userId = htmlspecialchars(strip_tags($_POST['userId']));
+$userId = strip_tags($_POST['userId']);
 $token = getTokenFromHeader();
 
 if (isset($database)) {

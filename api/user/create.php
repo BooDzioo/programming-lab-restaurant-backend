@@ -11,10 +11,10 @@ header('Content-Type: application/json');
 $rest_json = file_get_contents("php://input");
 $_POST = json_decode($rest_json, true);
 
-$name = htmlspecialchars(strip_tags($_POST['name']));
-$surname = htmlspecialchars(strip_tags($_POST['surname']));
-$email = htmlspecialchars(strip_tags($_POST['email']));
-$password = htmlspecialchars(strip_tags($_POST['password']));
+$name = strip_tags($_POST['name']);
+$surname = strip_tags($_POST['surname']);
+$email = strip_tags($_POST['email']);
+$password = strip_tags($_POST['password']);
 
 if (isset($database)) {
     $connection = $database->getConnection();
